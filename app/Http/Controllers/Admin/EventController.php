@@ -1,0 +1,4 @@
+<?php
+namespace App\Http\Controllers\Admin;
+use App\Http\Controllers\Controller; use App\Models\Event; use Illuminate\Http\Request;
+class EventController extends Controller { public function index(){return view('admin.events.index',['events'=>Event::latest('starts_at')->paginate(15)]);} public function store(Request $r){$d=$r->validate(['title'=>'required|max:180','description'=>'required','starts_at'=>'required|date','ends_at'=>'nullable|date|after:starts_at','location'=>'nullable|max:255','image'=>'nullable|image|max:4096','published'=>'nullable|boolean']); if($r->hasFile('image'))$d['image']=$r->file('image')->store('events','public'); Event::create($d);return back()->with('success','Event created.');} public function destroy(Event $event){$event->delete();return back()->with('success','Event deleted.');} }

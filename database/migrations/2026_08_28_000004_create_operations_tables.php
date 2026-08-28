@@ -1,0 +1,16 @@
+<?php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+return new class extends Migration {
+ public function up(): void {
+  Schema::create('inventory_categories',function(Blueprint $t){$t->id();$t->string('name')->unique();$t->timestamps();});
+  Schema::create('inventory',function(Blueprint $t){$t->id();$t->foreignId('inventory_category_id')->nullable()->constrained()->nullOnDelete();$t->string('name');$t->string('unit')->default('item');$t->decimal('quantity',12,2)->default(0);$t->decimal('reorder_level',12,2)->default(0);$t->string('supplier')->nullable();$t->timestamps();});
+  Schema::create('inventory_transactions',function(Blueprint $t){$t->id();$t->foreignId('inventory_id')->constrained('inventory')->cascadeOnDelete();$t->enum('type',['in','out','adjustment']);$t->decimal('quantity',12,2);$t->string('reason')->nullable();$t->foreignId('user_id')->nullable()->constrained()->nullOnDelete();$t->timestamps();});
+  Schema::create('education_records',function(Blueprint $t){$t->id();$t->foreignId('child_id')->constrained()->cascadeOnDelete();$t->string('school')->nullable();$t->string('grade')->nullable();$t->string('academic_year')->nullable();$t->decimal('school_fees',12,2)->default(0);$t->decimal('attendance',5,2)->nullable();$t->text('results')->nullable();$t->text('achievements')->nullable();$t->timestamps();});
+  Schema::create('medical_records',function(Blueprint $t){$t->id();$t->foreignId('child_id')->constrained()->cascadeOnDelete();$t->date('record_date');$t->string('record_type');$t->text('notes')->nullable();$t->decimal('expense',12,2)->default(0);$t->timestamps();});
+  Schema::create('audit_logs',function(Blueprint $t){$t->id();$t->foreignId('user_id')->nullable()->constrained()->nullOnDelete();$t->string('action');$t->string('subject_type')->nullable();$t->unsignedBigInteger('subject_id')->nullable();$t->text('description')->nullable();$t->ipAddress('ip_address')->nullable();$t->timestamps();});
+  Schema::create('settings',function(Blueprint $t){$t->id();$t->string('key')->unique();$t->text('value')->nullable();$t->timestamps();});
+ }
+ public function down(): void {Schema::dropIfExists('settings');Schema::dropIfExists('audit_logs');Schema::dropIfExists('medical_records');Schema::dropIfExists('education_records');Schema::dropIfExists('inventory_transactions');Schema::dropIfExists('inventory');Schema::dropIfExists('inventory_categories');}
+};

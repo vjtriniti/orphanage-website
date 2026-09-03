@@ -46,9 +46,14 @@ class DonorDashboardController extends Controller
                     ->whereBetween('created_at', [$start, $end])
                     ->sum('amount'),
             ];
-        });
+        })->values();
 
         $chartMax = max((float) $months->max('amount'), 1);
+        $chartPoints = $months->map(function ($month, $index) use ($chartMax) {
+            $x = 42 + ($index * 94);
+            $y = 190 - (($month['amount'] / $chartMax) * 145);
+            return round($x, 1) . ',' . round($y, 1);
+        })->implode(' ');
 
         return view('donor.dashboard', compact(
             'donations',
@@ -58,7 +63,8 @@ class DonorDashboardController extends Controller
             'yearTotal',
             'activeCampaigns',
             'months',
-            'chartMax'
+            'chartMax',
+            'chartPoints'
         ));
     }
 }

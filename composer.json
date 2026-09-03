@@ -4,7 +4,8 @@
   "description": "Professional orphanage and children's charity website.",
   "require": {
     "php": "^8.2",
-    "laravel/framework": "^12.0"
+    "laravel/framework": "^12.0",
+    "dompdf/dompdf": "^3.1"
   },
   "require-dev": {
     "fakerphp/faker": "^1.23",

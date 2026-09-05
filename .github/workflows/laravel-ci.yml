@@ -1,35 +1,58 @@
 name: Laravel CI
+
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
           extensions: mbstring, dom, fileinfo, pdo_sqlite
           coverage: none
+
+      - name: Prepare runtime directories
+        run: |
+          mkdir -p bootstrap/cache
+          mkdir -p storage/framework/cache/data
+          mkdir -p storage/framework/sessions
+          mkdir -p storage/framework/testing
+          mkdir -p storage/framework/views
+          mkdir -p storage/logs
+          mkdir -p database
+
       - name: Validate Composer
         run: composer validate --no-check-publish
+
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
+
       - name: Prepare environment
         run: |
           cp .env.example .env
-          php artisan key:generate
           touch database/database.sqlite
           sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
           sed -i 's|^DB_DATABASE=.*|DB_DATABASE=database/database.sqlite|' .env
+          php artisan key:generate
+
+      - name: Clear Laravel caches
+        run: php artisan optimize:clear
+
       - name: Syntax check
-        run: find app routes config database -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+        run: find app routes config database tests -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+
       - name: Run migrations
         run: php artisan migrate --force
+
       - name: Run tests
         run: php artisan test --without-tty

@@ -5,6 +5,10 @@
 <title>{{ $title ?? 'Hope & Care' }}</title>
 <meta name="description" content="Hope & Care — creating brighter futures through care, education and opportunity.">
 <script src="https://cdn.tailwindcss.com"></script><script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<style>
+input, textarea, select { border-color:#22c55e !important; }
+input:focus, textarea:focus, select:focus { border-color:#16a34a !important; outline:none !important; box-shadow:0 0 0 3px rgba(34,197,94,.15) !important; }
+</style>
 </head>
 <body class="bg-slate-50 text-slate-900 antialiased">
 @if(!request()->routeIs('dashboard'))

@@ -97,6 +97,24 @@
     </div>
 </section>
 
+@if($partners->isNotEmpty())
+<section class="border-y border-slate-200 bg-slate-50 py-16">
+    <div class="mx-auto max-w-7xl px-6 text-center">
+        <p class="font-bold uppercase tracking-widest text-emerald-700">SPONSORS &amp; PARTNERS</p>
+        <h2 class="mt-2 text-3xl font-black text-emerald-950 sm:text-4xl">Growing impact together.</h2>
+        <p class="mx-auto mt-4 max-w-2xl text-slate-600">We are grateful to the organizations and community partners who help create opportunities for children.</p>
+        <div class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-8">
+            @foreach($partners as $partner)
+                <a href="{{ $partner->website ?: '#' }}" @if($partner->website) target="_blank" rel="noopener" @endif class="group flex min-h-28 flex-col items-center justify-center rounded-2xl bg-white p-4 ring-1 ring-slate-200 transition hover:-translate-y-1 hover:ring-emerald-300">
+                    @if($partner->logo)<img src="{{ $partner->logo }}" alt="{{ $partner->name }}" class="h-12 max-w-[110px] object-contain">@else<span class="grid h-12 w-12 place-items-center rounded-full bg-emerald-100 font-black text-emerald-800">{{ strtoupper(substr($partner->name,0,1)) }}</span>@endif
+                    <span class="mt-3 text-xs font-bold text-slate-700 group-hover:text-emerald-700">{{ $partner->name }}</span>
+                </a>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
 @if($testimonials->isNotEmpty())
 <section class="bg-emerald-950 py-20 text-white"><div class="mx-auto max-w-7xl px-6"><p class="font-bold uppercase tracking-widest text-amber-400">TESTIMONIALS</p><h2 class="mt-2 text-3xl font-black sm:text-4xl">What our community says.</h2><div class="mt-10 grid gap-6 md:grid-cols-3">@foreach($testimonials as $testimonial)<article class="rounded-3xl bg-white/10 p-7 backdrop-blur"><p class="text-lg leading-8 text-emerald-50">“{{ $testimonial->quote }}”</p><div class="mt-6"><p class="font-black text-white">{{ $testimonial->name }}</p><p class="text-sm text-amber-300">{{ $testimonial->role }}</p></div></article>@endforeach</div></div></section>
 @endif

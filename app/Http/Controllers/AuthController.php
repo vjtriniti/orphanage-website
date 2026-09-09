@@ -30,6 +30,30 @@ class AuthController extends Controller
         return redirect()->intended(route('dashboard'));
     }
 
+    public function showAdminLogin(){ return view('auth.admin-login'); }
+
+    public function adminLogin(Request $request)
+    {
+        $credentials=$request->validate(['email'=>'required|email','password'=>'required|string']);
+
+        if(!Auth::attempt($credentials,$request->boolean('remember'))){
+            return back()->withErrors(['email'=>'Invalid administrator email or password.'])->onlyInput('email');
+        }
+
+        $request->session()->regenerate();
+        $user=Auth::user();
+
+        if (!(($user->is_admin ?? false) || $user->roles()->exists())) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return back()->withErrors(['email'=>'This account does not have administrator access.'])->onlyInput('email');
+        }
+
+        $request->session()->put('two_factor_verified', !$user->two_factor_enabled);
+        return redirect()->intended(route('admin.dashboard'));
+    }
+
     public function showRegister(){ return view('auth.register'); }
 
     public function register(Request $request){

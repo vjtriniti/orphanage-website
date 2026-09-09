@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Middleware\EnsureAdmin;
 use App\Http\Middleware\EnsurePermission;
+use App\Http\Middleware\EnsureTwoFactor;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', EnsureAdmin::class, EnsureTwoFactor::class])

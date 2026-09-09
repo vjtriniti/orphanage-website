@@ -1,4 +1,1 @@
-import Alpine from 'alpinejs';
-
-window.Alpine = Alpine;
-Alpine.start();
+// Frontend entry point. Alpine.js is loaded by the public layout CDN.

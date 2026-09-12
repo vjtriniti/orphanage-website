@@ -42,6 +42,9 @@ class DashboardController extends Controller
             $chartExpenses[] = (float) Expense::whereYear('expense_date', $date->year)->whereMonth('expense_date', $date->month)->sum('amount');
         }
 
+        // Keep the original chart variable available for existing dashboard markup.
+        $chartData = $chartDonations;
+
         $recentActivity = class_exists(AuditLog::class) ? AuditLog::latest()->limit(7)->get() : collect();
         $recentDonationsQuery = Donation::latest();
         if ($search !== '') {
@@ -57,7 +60,7 @@ class DashboardController extends Controller
         $lowStockItems = InventoryItem::whereColumn('quantity', '<=', 'reorder_level')->orderBy('quantity')->limit(5)->get();
 
         return view('admin.dashboard', compact(
-            'stats', 'chartLabels', 'chartDonations', 'chartExpenses', 'recentActivity',
+            'stats', 'chartLabels', 'chartData', 'chartDonations', 'chartExpenses', 'recentActivity',
             'recentDonations', 'campaigns', 'lowStockItems', 'search'
         ));
     }

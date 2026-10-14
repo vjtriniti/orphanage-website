@@ -9,6 +9,7 @@ use App\Models\Child;
 use App\Models\Donation;
 use App\Models\Expense;
 use App\Models\InventoryItem;
+use App\Models\MedicalRecord;
 use App\Models\Volunteer;
 use Illuminate\Http\Request;
 
@@ -29,6 +30,8 @@ class DashboardController extends Controller
             'campaigns' => Campaign::where('status', 'active')->count(),
             'expenses' => (float) Expense::sum('amount'),
             'low_stock' => InventoryItem::whereColumn('quantity', '<=', 'reorder_level')->count(),
+            'children_in_school' => Child::where('active', true)->where('education_status', 'like', '%school%')->count(),
+            'medical_cases' => MedicalRecord::count(),
         ];
         $stats['net'] = $stats['donations'] - $stats['expenses'];
 

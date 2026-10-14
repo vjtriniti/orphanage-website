@@ -22,8 +22,25 @@ The admin portal and donor portal use separate URLs and authorization checks. Vi
 - Reports, PDF/CSV export foundations, notifications, audit logs, roles and permissions
 - Account authentication, password reset, email verification and optional two-factor authentication
 
-## Local setup
-1. Install PHP and Composer, Node.js/npm, and MySQL.
+## Local setup with Laravel Herd (Windows)
+1. Install and open Laravel Herd.
+2. Clone the repository into Herd's sites folder, for example `C:\\Users\\YOUR_NAME\\Herd\\orphanage-website`.
+3. Open PowerShell in the project folder.
+4. Copy `.env.example` to `.env` and set the database credentials for a MySQL database you created locally.
+5. Run:
+
+   ```powershell
+   composer install
+   php artisan key:generate
+   php artisan migrate --seed
+   npm install
+   npm run build
+   ```
+
+6. In Herd, add/link the project if it is not automatically detected, then open the Herd domain it assigns (usually `http://orphanage-website.test`). You can alternatively run `php artisan serve` and open `http://127.0.0.1:8000`.
+
+## General setup
+1. Install PHP 8.2+, Composer, Node.js/npm, and MySQL.
 2. Copy `.env.example` to `.env` and set the database credentials.
 3. Run:
 
